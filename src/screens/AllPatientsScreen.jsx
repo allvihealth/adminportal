@@ -1,78 +1,153 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setActiveTab } from '../store/slices/adminSlice';
 
 const AllPatientsScreen = () => {
   const dispatch = useDispatch();
   
-  // 🚀 Read array and telemetry directly from the global Redux slice
+  // 🚀 Read dynamic baseline profiles straight from global Redux cache memory
   const patients = useSelector((state) => state.admin.patients || []);
   
-  const totalCount = patients.length;
-  const activeCount = patients.filter(p => p.status === 'Active' || parseInt(p.streak) > 0).length;
-  const invitedCount = patients.filter(p => p.status === 'Invited').length;
+  // Controlled Filter & Search inputs states
+  const [selectedOrg, setSelectedOrg] = useState('All');
+  const [selectedCondition, setSelectedCondition] = useState('All');
+  const [selectedRegion, setSelectedRegion] = useState('All');
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // 🌟 Compute unique contextual filter option sets based on available live rows
+  const dynamicOrgs = ['All', ...new Set(patients.map(p => p.organization).filter(Boolean))];
+  const dynamicConditions = ['All', ...new Set(patients.map(p => p.condition).filter(Boolean))];
+  const dynamicRegions = ['All', ...new Set(patients.map(p => p.region).filter(Boolean))];
+
+  // Pipeline Filter Logic Mapping Matrix
+  const filteredPatients = patients.filter((patient) => {
+    const matchesOrg = selectedOrg === 'All' || patient.organization === selectedOrg;
+    const matchesCondition = selectedCondition === 'All' || patient.condition === selectedCondition;
+    const matchesRegion = selectedRegion === 'All' || patient.region === selectedRegion;
+    
+    const normalizedQuery = searchQuery.toLowerCase();
+    const matchesSearch = !searchQuery || 
+      patient.name?.toLowerCase().includes(normalizedQuery) ||
+      patient.id?.toLowerCase().includes(normalizedQuery);
+
+    return matchesOrg && matchesCondition && matchesRegion && matchesSearch;
+  });
+
+  // Calculate top KPI metadata counters across the active scope
+  const totalCount = filteredPatients.length;
+  const activeCount = filteredPatients.filter(p => p.status?.toLowerCase() === 'active').length;
+  const invitedCount = filteredPatients.filter(p => p.status?.toLowerCase() === 'invited').length;
 
   return (
     <div style={{ animation: 'fadeIn 0.15s ease-in-out' }}>
-      <div className="ph" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+      
+      {/* PAGE HEADER */}
+      <div className="ph">
         <div>
-          <h2 className="ph-title" style={{ fontFamily: "'Playfair Display', serif", fontSize: '24px', fontWeight: 600 }}>All Patients</h2>
-          <div className="ph-sub" style={{ fontSize: '13px', color: 'var(--grey)' }}>
+          <h2 className="ph-title">All Patients</h2>
+          <div className="ph-sub">
             {activeCount} active · {invitedCount} invited · 0 discharged · Across all organisations
           </div>
         </div>
         <button 
-          style={{ background: 'var(--teal)', color: 'var(--ivory)', border: 'none', padding: '9px 18px', borderRadius: '8px', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }} 
+          className="btn btn-primary"
           onClick={() => dispatch(setActiveTab('patient-enrol'))}
         >
           + Enrol Patient
         </button>
       </div>
 
+      {/* 🌟 REFERENCE MOCKUP FILTER CONTROL GRID BAR */}
+      <div style={{ display: 'flex', gap: '10px', marginBottom: '18px', flexWrap: 'wrap' }}>
+        <select 
+          className="form-select" 
+          style={{ width: 'auto', padding: '8px 32px 8px 14px', fontSize: '13px' }}
+          value={selectedOrg}
+          onChange={(e) => setSelectedOrg(e.target.value)}
+        >
+          <option value="All">All organisations</option>
+          {dynamicOrgs.filter(o => o !== 'All').map(org => (
+            <option key={org} value={org}>{org}</option>
+          ))}
+        </select>
+
+        <select 
+          className="form-select" 
+          style={{ width: 'auto', padding: '8px 32px 8px 14px', fontSize: '13px' }}
+          value={selectedCondition}
+          onChange={(e) => setSelectedCondition(e.target.value)}
+        >
+          <option value="All">All conditions</option>
+          {dynamicConditions.filter(c => c !== 'All').map(cond => (
+            <option key={cond} value={cond}>{cond}</option>
+          ))}
+        </select>
+
+        <select 
+          className="form-select" 
+          style={{ width: 'auto', padding: '8px 32px 8px 14px', fontSize: '13px' }}
+          value={selectedRegion}
+          onChange={(e) => setSelectedRegion(e.target.value)}
+        >
+          <option value="All">All regions</option>
+          {dynamicRegions.filter(r => r !== 'All').map(reg => (
+            <option key={reg} value={reg}>{reg}</option>
+          ))}
+        </select>
+
+        <input 
+          type="text" 
+          className="form-input"
+          placeholder="Search by name or ID…" 
+          style={{ flex: 1, minWidth: '200px', padding: '8px 14px', fontSize: '13px' }}
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+      </div>
+
+      {/* DYNAMIC COMPONENT RECORDS TABLE CARD CONTAINER */}
       <div className="card" style={{ padding: 0, overflowX: 'auto' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+        <table className="dt">
           <thead>
             <tr>
-              <th style={{ fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', color: 'var(--grey)', padding: '10px 14px', textAlign: 'left', borderBottom: '2px solid #F1F5F9', background: '#F8FAFC' }}>Patient</th>
-              <th style={{ fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', color: 'var(--grey)', padding: '10px 14px', textAlign: 'left', borderBottom: '2px solid #F1F5F9', background: '#F8FAFC' }}>Organisation</th>
-              <th style={{ fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', color: 'var(--grey)', padding: '10px 14px', textAlign: 'left', borderBottom: '2px solid #F1F5F9', background: '#F8FAFC' }}>Condition</th>
-              <th style={{ fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', color: 'var(--grey)', padding: '10px 14px', textAlign: 'left', borderBottom: '2px solid #F1F5F9', background: '#F8FAFC' }}>Region</th>
-              <th style={{ fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', color: 'var(--grey)', padding: '10px 14px', textAlign: 'left', borderBottom: '2px solid #F1F5F9', background: '#F8FAFC' }}>Streak</th>
-              <th style={{ fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', color: 'var(--grey)', padding: '10px 14px', textAlign: 'left', borderBottom: '2px solid #F1F5F9', background: '#F8FAFC' }}>Status</th>
+              <th>Patient</th>
+              <th>Organisation</th>
+              <th>Condition</th>
+              <th>Region</th>
+              <th>Streak</th>
+              <th>Status</th>
             </tr>
           </thead>
           <tbody>
-            {patients.map((patient) => {
-              // Safely dig out the organisation name context from your controller structure
-              const orgName = patient.organization || (patient.patient_enrolments?.[0]?.organisations?.name) || 'Independent Clinic';
+            {filteredPatients.map((patient) => {
+              const currentOrg = patient.organization || 'Independent Clinic';
               
+              // Handle badge mapping variables dynamically per row state definition
+              const isInvited = patient.status?.toLowerCase() === 'invited';
+              const badgeClass = isInvited ? 'badge amber' : 'badge green';
+
               return (
-                <tr key={patient.id} style={{ borderBottom: '1px solid #F1F5F9' }}>
-                  <td style={{ padding: '13px 14px', fontSize: '13px' }}>
-                    <div style={{ fontWeight: 600 }}>{patient.id.substring(0, 8)}...</div>
+                <tr key={patient.id}>
+                  <td>
+                    <div style={{ fontWeight: 600 }}>
+                      {patient.id ? `${patient.id.substring(0, 8)}...` : 'Allvi-UUID'}
+                    </div>
                     <div style={{ fontSize: '11px', color: 'var(--grey)' }}>{patient.name}</div>
                   </td>
-                  <td style={{ padding: '13px 14px', fontSize: '12px' }}>{orgName}</td>
-                  <td style={{ padding: '13px 14px', fontSize: '12px' }}>{patient.condition}</td>
-                  <td style={{ padding: '13px 14px', fontSize: '13px' }}>
-                    <span style={{ background: 'var(--teal-light)', color: 'var(--teal)', padding: '3px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: 700 }}>
+                  <td style={{ fontSize: '12px' }}>{currentOrg}</td>
+                  <td style={{ fontSize: '12px' }}>{patient.condition}</td>
+                  <td>
+                    <span className="badge teal">
                       {patient.region || '🇬🇧 UK'}
                     </span>
                   </td>
-                  <td style={{ padding: '13px 14px', fontSize: '13px' }}>
-                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', whiteSpace: 'nowrap', fontWeight: 600, color: 'var(--green)' }}>
+                  <td>
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', whiteSpace: 'nowrap', fontWeight: 600, color: 'var(--green)', fontSize: '13px' }}>
                       🔥 {patient.streak || 0}
                     </span>
                   </td>
-                  <td style={{ padding: '13px 14px', fontSize: '13px' }}>
-                    <span style={{ 
-                      background: patient.status === 'Invited' ? 'var(--amber-bg)' : 'var(--green-bg)', 
-                      color: patient.status === 'Invited' ? 'var(--amber)' : 'var(--green)', 
-                      padding: '3px 10px', 
-                      borderRadius: '20px', 
-                      fontSize: '11px', 
-                      fontWeight: 700 
-                    }}>
+                  <td>
+                    <span className={badgeClass}>
                       {patient.status || 'Active'}
                     </span>
                   </td>
@@ -80,16 +155,17 @@ const AllPatientsScreen = () => {
               );
             })}
             
-            {patients.length === 0 && (
+            {filteredPatients.length === 0 && (
               <tr>
-                <td colSpan="6" style={{ padding: '24px', textAlign: 'center', color: 'var(--grey)', fontSize: '13px' }}>
-                  No patient profiles detected in backend logs.
+                <td colSpan="6" style={{ padding: '32px', textAlign: 'center', color: 'var(--grey)', fontSize: '13px' }}>
+                  No historical patient records matched your active filter parameters.
                 </td>
               </tr>
             )}
           </tbody>
         </table>
       </div>
+
     </div>
   );
 };

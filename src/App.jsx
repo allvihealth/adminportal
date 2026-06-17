@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import AdminTopbar from './components/AdminTopbar';
 import AdminSidebar from './components/AdminSidebar';
@@ -19,13 +19,20 @@ function App() {
   const activeTab = useSelector((state) => state.admin.activeTab);
   const isFormScreen = activeTab === 'org-create' || activeTab === 'patient-enrol';
 
+  // 🚀 Mobile Drawer State Shared Pipeline
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-      {/* 🌟 Fixed: Render Topbar directly without an extra nested div container */}
-      <AdminTopbar />
+      
+      {/* 🌟 Linked Mobile Sync States down as Props */}
+      <AdminTopbar isMobileOpen={isMobileOpen} setIsMobileOpen={setIsMobileOpen} />
 
-      <div className="layout">
-        <AdminSidebar />
+      {/* 🌟 FIXED: Added explicit flex layout behavior directly to the element container */}
+      <div className="layout" style={{ display: 'flex', flex: 1, width: '100%' }}>
+        
+        {/* 🌟 Linked Mobile Sync States down as Props */}
+        <AdminSidebar isMobileOpen={isMobileOpen} setIsMobileOpen={setIsMobileOpen} />
 
         <main 
           className="main" 
@@ -33,7 +40,8 @@ function App() {
             flex: 1, 
             padding: '28px 32px', 
             background: '#F1F5F9',
-            maxWidth: isFormScreen ? '700px' : 'none'
+            maxWidth: isFormScreen ? '700px' : 'none',
+            boxSizing: 'border-box'
           }}
         >
           {activeTab === 'overview' && <OverviewScreen />}

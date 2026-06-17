@@ -5,7 +5,7 @@ const ComplianceScreen = () => {
     <div style={{ animation: 'fadeIn 0.15s ease-in-out' }}>
       
       {/* PAGE HEADER */}
-      <div className="ph">
+      <div className="ph" style={{ flexWrap: 'wrap', gap: '12px' }}>
         <div>
           <h2 className="ph-title">Compliance</h2>
           <div className="ph-sub">UK GDPR · Data residency · Erasure requests · DPA/BAA status</div>
@@ -13,57 +13,57 @@ const ComplianceScreen = () => {
       </div>
 
       {/* TOP GRIDS PANEL Workspace */}
-      <div className="g2">
+      <div className="g2" style={{ marginBottom: '16px' }}>
         
         {/* 📋 CARD 1: DATA RESIDENCY STATUS */}
-        <div className="card">
+        <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
           <div className="card-title">Data Residency Status</div>
-          <div className="stat-row">
+          <div className="stat-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px', flexWrap: 'wrap', padding: '8px 0', borderBottom: '1px solid #F1F5F9' }}>
             <span className="stat-label">UK patients</span>
             <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--green)' }}>✓ eu-west-2 (London)</span>
           </div>
-          <div className="stat-row">
+          <div className="stat-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px', flexWrap: 'wrap', padding: '8px 0', borderBottom: '1px solid #F1F5F9' }}>
             <span className="stat-label">US patients</span>
             <span style={{ fontSize: '12px', color: 'var(--grey)' }}>No US patients yet</span>
           </div>
-          <div className="stat-row">
+          <div className="stat-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px', flexWrap: 'wrap', padding: '8px 0', borderBottom: '1px solid #F1F5F9' }}>
             <span className="stat-label">UK Supabase project</span>
             <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--green)' }}>✓ Provisioned · eu-west-2</span>
           </div>
-          <div className="stat-row">
+          <div className="stat-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px', flexWrap: 'wrap', padding: '8px 0', borderBottom: '1px solid #F1F5F9' }}>
             <span className="stat-label">US Supabase project</span>
             <span style={{ fontSize: '12px', color: 'var(--grey)' }}>Provisioned · us-east-1 (ready)</span>
           </div>
-          <div className="stat-row">
+          <div className="stat-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px', flexWrap: 'wrap', padding: '8px 0' }}>
             <span className="stat-label">Cross-region PHI transfer</span>
             <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--green)' }}>✓ None detected</span>
           </div>
         </div>
 
         {/* 📋 CARD 2: DPA / BAA STATUS */}
-        <div className="card">
+        <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
           <div className="card-title">DPA / BAA Status</div>
-          <div className="stat-row">
+          <div className="stat-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px', flexWrap: 'wrap', padding: '8px 0', borderBottom: '1px solid #F1F5F9' }}>
             <span className="stat-label">Supabase DPA (UK)</span>
             <span className="badge green">✓ Signed</span>
           </div>
-          <div className="stat-row">
+          <div className="stat-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px', flexWrap: 'wrap', padding: '8px 0', borderBottom: '1px solid #F1F5F9' }}>
             <span className="stat-label">Postmark DPA</span>
             <span className="badge green">✓ Signed</span>
           </div>
-          <div className="stat-row">
+          <div className="stat-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px', flexWrap: 'wrap', padding: '8px 0', borderBottom: '1px solid #F1F5F9' }}>
             <span className="stat-label">Anthropic DPA</span>
             <span className="badge amber">⚠ Pending</span>
           </div>
-          <div className="stat-row">
+          <div className="stat-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px', flexWrap: 'wrap', padding: '8px 0', borderBottom: '1px solid #F1F5F9' }}>
             <span className="stat-label">Stripe DPA</span>
             <span className="badge green">✓ Signed</span>
           </div>
-          <div className="stat-row">
+          <div className="stat-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px', flexWrap: 'wrap', padding: '8px 0', borderBottom: '1px solid #F1F5F9' }}>
             <span className="stat-label">Supabase BAA (US)</span>
             <span className="badge grey">Not required yet</span>
           </div>
-          <div className="stat-row">
+          <div className="stat-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px', flexWrap: 'wrap', padding: '8px 0' }}>
             <span className="stat-label">Greenfield Endocrinology DPA</span>
             <span className="badge green">✓ Signed · 1 May 2026</span>
           </div>
@@ -101,19 +101,19 @@ const ComplianceScreen = () => {
       </div>
 
       {/* 📋 CARD 4: CONSENT OVERVIEW */}
-      <div className="card">
+      <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
         <div className="card-title">Consent Overview</div>
-        <div className="stat-row">
+        <div className="stat-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px', flexWrap: 'wrap', padding: '8px 0', borderBottom: '1px solid #F1F5F9' }}>
           <span className="stat-label">Patients with valid data processing consent</span>
-          <span className="stat-val" style={{ color: 'var(--green)' }}>1 / 1 (100%)</span>
+          <span className="stat-val" style={{ color: 'var(--green)', fontSize: '13px', fontWeight: 600 }}>1 / 1 (100%)</span>
         </div>
-        <div className="stat-row">
+        <div className="stat-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px', flexWrap: 'wrap', padding: '8px 0', borderBottom: '1px solid #F1F5F9' }}>
           <span className="stat-label">Patients with AI processing consent</span>
-          <span className="stat-val" style={{ color: 'var(--green)' }}>1 / 1 (100%)</span>
+          <span className="stat-val" style={{ color: 'var(--green)', fontSize: '13px', fontWeight: 600 }}>1 / 1 (100%)</span>
         </div>
-        <div className="stat-row">
+        <div className="stat-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px', flexWrap: 'wrap', padding: '8px 0' }}>
           <span className="stat-label">Withdrawn consents (last 90 days)</span>
-          <span className="stat-val">0</span>
+          <span className="stat-val" style={{ fontSize: '13px', fontWeight: 600 }}>0</span>
         </div>
       </div>
 

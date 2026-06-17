@@ -7,7 +7,7 @@ const CreateOrgScreen = () => {
   const loading = useSelector((state) => state.admin.loading);
   const error = useSelector((state) => state.admin.error);
 
-  // 🚀 Initial placeholder states
+  // 🚀 Initial layout placeholders (Empty state elements)
   const [name, setName] = useState('');
   const [type, setType] = useState('private_clinic');
   const [region, setRegion] = useState('GB');
@@ -23,10 +23,10 @@ const CreateOrgScreen = () => {
   const [senderName, setSenderName] = useState('');
   const [primaryColour, setPrimaryColour] = useState('#0F4C5C');
 
-  // Admin User Provisioning
+  // Admin User Provisioning 
   const [adminName, setAdminName] = useState('');
   const [adminEmail, setAdminEmail] = useState('');
-  const [adminRole, setAdminRole] = useState('Programme Manager');
+  const [adminRole, setAdminRole] = useState('org_admin');
 
   // Compliance Flags
   const [dpaSignedAt, setDpaSignedAt] = useState('');
@@ -59,11 +59,11 @@ const CreateOrgScreen = () => {
       adminUser: {
         fullName: adminName,
         email: adminEmail,
-        role: adminRole
+        role: adminRole // ➔ Sends 'org_admin' directly to backend matching check constraints
       }
     };
 
-    // 🌟 Chaining .unwrap() detects an error-free 201 response and forces a tab route transition instantly!
+    // Chaining unwrap to gracefully catch success response vectors and route tab transitions
     dispatch(createOrganisation(payload))
       .unwrap()
       .then(() => {
@@ -85,6 +85,7 @@ const CreateOrgScreen = () => {
 
   return (
     <div style={{ animation: 'fadeIn 0.15s ease-in-out' }}>
+      
       {/* PAGE HEADER */}
       <div className="ph" style={{ marginBottom: '24px' }}>
         <div>
@@ -204,13 +205,12 @@ const CreateOrgScreen = () => {
               value={adminRole}
               onChange={(e) => setAdminRole(e.target.value)}
             >
-              {/* 🌟 These explicit values now perfectly match your constraint array choices */}
               <option value="org_admin">Programme Manager (Org Admin)</option>
               <option value="org_admin">Executive (Org Admin)</option>
             </select>
           </div>
 
-          <div className="callout teal" style={{ marginTop: '8px' }}>
+          <div className="callout teal" style={{ marginTop: '16px' }}>
             <strong style={{ color: 'var(--teal)' }}>What happens on submit:</strong> Org account is created in the correct Supabase region (eu-west-2 for UK). Admin receives a welcome email with their login link and temporary password.
           </div>
 
@@ -228,7 +228,7 @@ const CreateOrgScreen = () => {
           </div>
 
           {/* FORM ACTIONS */}
-          <div style={{ display: 'flex', gap: '10px', marginTop: '16px' }}>
+          <div style={{ display: 'flex', gap: '10px', marginTop: '24px' }}>
             <button type="submit" className="btn btn-primary" disabled={loading}>
               {loading ? 'Processing...' : 'Create Organisation & Send Credentials →'}
             </button>

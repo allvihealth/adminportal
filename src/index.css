@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair Display:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap');
 
 :root {
   --teal: #0F4C5C; 
@@ -113,6 +113,7 @@ body {
   height: calc(100vh - 60px);
   overflow-y: auto;
   flex-shrink: 0;
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .si-section {
@@ -540,17 +541,63 @@ body {
 .audit-row:last-child { border-bottom: none; }
 .audit-time { font-size: 11px; color: var(--grey); white-space: nowrap; min-width: 130px; }
 
-/* ═══════════════════════ MEDIA QUERIES ═══════════════════════ */
+/* ═══════════════════════ CONSOLIDATED RESPONSIVE LAYER ═══════════════════════ */
 
-@media(max-width: 900px) {
-  .sidebar { display: none; }
-  .g4 { grid-template-columns: repeat(2, 1fr); }
-  .g3 { grid-template-columns: 1fr 1fr; }
+@media (max-width: 900px) {
+  /* Layout Flow Structural Overrides */
+  .layout {
+    display: block !important;
+    position: relative !important;
+    width: 100% !important;
+  }
+
+  .main { 
+    padding: 16px 20px !important; 
+    width: 100% !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
+  }
+
+  /* Fixed Absolute Sidebar Drawer Engine */
+  .sidebar { 
+    position: fixed !important; 
+    top: 60px !important; 
+    left: 0 !important; 
+    height: calc(100vh - 60px) !important; 
+    width: 240px !important;
+    min-width: 240px !important;
+    z-index: 150 !important; 
+    transform: translateX(-100%); 
+    box-shadow: 4px 0 24px rgba(15, 23, 42, 0.15);
+  }
+
+  /* Active State Injected via Topbar Toggle Button */
+  .sidebar.mobile-open {
+    transform: translateX(0) !important;
+  }
+
+  /* Inline Trigger Buttons */
+  .topbar-menu-toggle {
+    display: flex !important;
+  }
+
+  /* Dynamic Layout Shrink Targets */
+  .g4 { grid-template-columns: repeat(2, 1fr) !important; }
+  .g3 { grid-template-columns: repeat(2, 1fr) !important; }
+  .form-row-2 { grid-template-columns: 1fr !important; gap: 0; }
 }
 
-@media(max-width: 600px) {
-  .main { padding: 16px; }
-  .g2 { grid-template-columns: 1fr; }
+@media (max-width: 600px) {
+  .main { padding: 16px !important; }
+  .g4 { grid-template-columns: 1fr !important; }
+  .g3 { grid-template-columns: 1fr !important; }
+  .g2 { grid-template-columns: 1fr !important; }
+}
+
+@media (max-width: 480px) {
+  .topbar-admin-badge {
+    display: none !important;
+  }
 }
 
 /* UTILITY CLASSES */

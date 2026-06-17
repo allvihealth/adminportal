@@ -8,13 +8,13 @@ const CreatePatientScreen = () => {
   const loading = useSelector((state) => state.admin.loading);
   const error = useSelector((state) => state.admin.error);
 
-  // 🚀 Local Controlled Input States
+  // 🚀 Local Controlled Input States - Clean placeholders and empty defaults
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [selectedOrg, setSelectedOrg] = useState('');
   const [enrolmentType, setEnrolmentType] = useState('Direct (D2C)');
   const [condition, setCondition] = useState('Thyroid Disease');
-  const [region, setRegion] = useState('🇬🇧 UK — eu-west-2');
+  const [region, setRegion] = useState('GB');
   const [clinicianEmail, setClinicianEmail] = useState('');
   const [assignedAllviClinician, setAssignedAllviClinician] = useState('Auto-assign');
 
@@ -26,22 +26,26 @@ const CreatePatientScreen = () => {
       return;
     }
 
-    // 🌟 Mapped to fit your exact backend parameters:
-    // const { fullName, email, primaryCondition, referringClinician, treatingClinicianEmail } = req.body;
     const payload = {
       fullName,
       email,
-      primaryCondition: condition, // ➔ mapped
-      referringClinician: assignedAllviClinician, // ➔ mapped
-      treatingClinicianEmail: clinicianEmail, // ➔ mapped
-      // Included trailing tracking metadata just in case
+      primaryCondition: condition, 
+      referringClinician: assignedAllviClinician, 
+      treatingClinicianEmail: clinicianEmail || null, 
       organization: selectedOrg,
       enrolmentType,
       region
     };
 
-    // Dispatch payload request directly to backend route controller
-    dispatch(enrollPatient(payload));
+    // 🌟 Chaining .unwrap() redirects to the All Patients directory panel instantly on success
+    dispatch(enrollPatient(payload))
+      .unwrap()
+      .then(() => {
+        dispatch(setActiveTab('patients'));
+      })
+      .catch((err) => {
+        console.error("❌ Patient enrolment request rejected:", err);
+      });
   };
 
   return (
@@ -51,6 +55,7 @@ const CreatePatientScreen = () => {
       <div className="ph">
         <div>
           <button 
+            type="button"
             onClick={() => dispatch(setActiveTab('patients'))} 
             style={{ fontSize: '13px', color: 'var(--grey)', background: 'none', border: 'none', cursor: 'pointer', padding: 0, marginBottom: '8px' }}
           >
@@ -76,7 +81,7 @@ const CreatePatientScreen = () => {
               <label className="form-label">Patient full name <span style={{ color: '#DC2626' }}>*</span></label>
               <input 
                 className="form-input" 
-                placeholder="Full name" 
+                placeholder="e.g. Jane Doe" 
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
               />
@@ -115,9 +120,9 @@ const CreatePatientScreen = () => {
                 value={enrolmentType}
                 onChange={(e) => setEnrolmentType(e.target.value)}
               >
-                <option>Direct (D2C)</option>
-                <option>Clinic referral</option>
-                <option>Admin referral</option>
+                <option value="Direct (D2C)">Direct (D2C)</option>
+                <option value="Clinic referral">Clinic referral</option>
+                <option value="Admin referral">Admin referral</option>
               </select>
             </div>
           </div>
@@ -131,11 +136,11 @@ const CreatePatientScreen = () => {
                 value={condition}
                 onChange={(e) => setCondition(e.target.value)}
               >
-                <option>Thyroid Disease</option>
-                <option>PCOS</option>
-                <option>Endometriosis</option>
-                <option>Perimenopause</option>
-                <option>Menopause</option>
+                <option value="Thyroid Disease">Thyroid Disease</option>
+                <option value="PCOS">PCOS</option>
+                <option value="Endometriosis">Endometriosis</option>
+                <option value="Perimenopause">Perimenopause</option>
+                <option value="Menopause">Menopause</option>
               </select>
             </div>
             <div className="form-row">
@@ -145,8 +150,8 @@ const CreatePatientScreen = () => {
                 value={region}
                 onChange={(e) => setRegion(e.target.value)}
               >
-                <option>🇬🇧 UK — eu-west-2</option>
-                <option>🇺🇸 US — us-east-1</option>
+                <option value="GB">🇬🇧 UK — eu-west-2</option>
+                <option value="US">🇺🇸 US — us-east-1</option>
               </select>
             </div>
           </div>
@@ -170,14 +175,14 @@ const CreatePatientScreen = () => {
               value={assignedAllviClinician}
               onChange={(e) => setAssignedAllviClinician(e.target.value)}
             >
-              <option>Auto-assign</option>
-              <option>Dr. Priya Mehta</option>
-              <option>Dr. James Wilson</option>
+              <option value="Auto-assign">Auto-assign</option>
+              <option value="Dr. Priya Mehta">Dr. Priya Mehta</option>
+              <option value="Dr. James Wilson">Dr. James Wilson</option>
             </select>
           </div>
 
           <div className="callout teal" style={{ marginTop: '20px' }}>
-            <strong style={{ color: 'var(--teal)' }}>On submit:</strong> Patient receives a magic link invitation email. Data is created in the <strong>eu-west-2 (London)</strong> Supabase project. Patient appears in the All Patients panel with status: Invited.
+            <strong style={{ color: 'var(--teal)' }}>On submit:</strong> Patient receives a magic link invitation email. Data is created in the correct database region project. Patient appears in the All Patients panel with status: Invited.
           </div>
 
           {/* FORM DEPLOYMENT FOOTER ACTIONS */}

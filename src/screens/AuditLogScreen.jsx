@@ -36,7 +36,7 @@ const AuditLogScreen = () => {
     <div style={{ animation: 'fadeIn 0.15s ease-in-out' }}>
       
       {/* PAGE HEADER */}
-      <div className="ph">
+      <div className="ph" style={{ flexWrap: 'wrap', gap: '12px' }}>
         <div>
           <h2 className="ph-title">Audit Log</h2>
           <div className="ph-sub">Immutable · Append-only · All platform actions · Required for UK GDPR and HIPAA</div>
@@ -53,7 +53,7 @@ const AuditLogScreen = () => {
       <div style={{ display: 'flex', gap: '10px', margin: '16px 0', flexWrap: 'wrap' }}>
         <select 
           className="form-select" 
-          style={{ width: 'auto', padding: '8px 32px 8px 14px' }}
+          style={{ width: 'auto', padding: '8px 32px 8px 14px', fontSize: '13px' }}
           value={actionType}
           onChange={(e) => setActionType(e.target.value)}
         >
@@ -65,7 +65,7 @@ const AuditLogScreen = () => {
 
         <select 
           className="form-select" 
-          style={{ width: 'auto', padding: '8px 32px 8px 14px' }}
+          style={{ width: 'auto', padding: '8px 32px 8px 14px', fontSize: '13px' }}
           value={actorRole}
           onChange={(e) => setActorRole(e.target.value)}
         >
@@ -78,7 +78,7 @@ const AuditLogScreen = () => {
         <input 
           type="date" 
           className="form-input" 
-          style={{ width: 'auto', padding: '8px 14px' }}
+          style={{ width: 'auto', padding: '8px 14px', fontSize: '13px' }}
           value={filterDate}
           onChange={(e) => setFilterDate(e.target.value)}
         />
@@ -87,7 +87,7 @@ const AuditLogScreen = () => {
           type="text" 
           className="form-input"
           placeholder="Search patient ID or resource…" 
-          style={{ flex: 1, minWidth: '200px', padding: '8px 14px' }}
+          style={{ flex: 1, minWidth: '200px', padding: '8px 14px', fontSize: '13px' }}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
@@ -153,7 +153,8 @@ const AuditLogScreen = () => {
 
             {filteredLogs.length === 0 && (
               <tr>
-                <td colSpan="7" style={{ textalign: 'center', color: 'var(--grey)', padding: '24px' }}>
+                {/* 🌟 Fixed textalign casing constraint to textAlign */}
+                <td colSpan="7" style={{ textAlign: 'center', color: 'var(--grey)', padding: '24px' }}>
                   No historical append-only logs matched the chosen search parameters.
                 </td>
               </tr>
